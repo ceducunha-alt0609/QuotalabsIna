@@ -14,6 +14,7 @@ const CDN_CACHE     = 'quotalab-cdn-v1';
 const SHELL_ASSETS = [
   './',
   './ql_inadimplencia_SALVO__3_.html',
+  './ql_inadimplencia_SALVO__3_.html?utm_source=pwa',
   './manifest.json',
   './icons/icon.svg',
   './icons/favicon.ico',
@@ -23,6 +24,13 @@ const SHELL_ASSETS = [
   './icons/icon-32.png',
   './icons/icon-16.png',
 ];
+
+/* Normalizar URL — ignorar utm_* e tab= para fins de cache */
+function normalizeUrl(url) {
+  const u = new URL(url);
+  ['utm_source','utm_medium','utm_campaign','tab'].forEach(p => u.searchParams.delete(p));
+  return u.toString();
+}
 
 /* ── Origens tratadas como CDN (stale-while-revalidate) ── */
 const CDN_ORIGINS = [
@@ -83,18 +91,24 @@ self.addEventListener('fetch', event => {
 /* ════ Estratégias ════ */
 
 async function cacheFirst(request) {
-  const cached = await caches.match(request);
+  const normalized = normalizeUrl(request.url);
+  const normReq = normalized !== request.url ? new Request(normalized) : request;
+  const cached = await caches.match(normReq) || await caches.match(request);
   if (cached) return cached;
   try {
     const response = await fetch(request);
     if (response.ok) {
       const cache = await caches.open(CACHE_NAME);
-      cache.put(request, response.clone());
+      cache.put(normReq, response.clone());
     }
     return response;
   } catch {
-    /* offline e não está no cache — retorna página principal como fallback */
-    return caches.match('./ql_inadimplencia_SALVO__3_.html');
+    return (
+      await caches.match('./ql_inadimplencia_SALVO__3_.html') ||
+      new Response('<h1>Offline</h1><p>Conecte-se para carregar o QuotaLab.</p>', {
+        headers: { 'Content-Type': 'text/html' }
+      })
+    );
   }
 }
 
