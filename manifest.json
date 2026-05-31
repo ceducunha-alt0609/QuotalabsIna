@@ -1,35 +1,121 @@
 {
   "name": "QuotaLab Inadimplência PRO",
   "short_name": "QuotaLab",
-  "description": "Simulador e central de decisão de inadimplência condominial",
-  "start_url": "./ql_inadimplencia_SALVO__3_.html",
+  "description": "Central de decisão e simulador de inadimplência condominial",
+  "id": "/",
+  "start_url": "./ql_inadimplencia_SALVO__3_.html?utm_source=pwa",
+  "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "any",
   "background_color": "#090c10",
   "theme_color": "#f0a020",
   "lang": "pt-BR",
-  "categories": ["finance", "productivity", "utilities"],
-  "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png" },
-    { "src": "icons/icon-64.png",  "sizes": "64x64",   "type": "image/png" },
-    { "src": "icons/icon-48.png",  "sizes": "48x48",   "type": "image/png" },
-    { "src": "icons/icon-32.png",  "sizes": "32x32",   "type": "image/png" },
-    { "src": "icons/icon-16.png",  "sizes": "16x16",   "type": "image/png" },
-    { "src": "icons/icon.svg",     "sizes": "any",      "type": "image/svg+xml" }
+  "dir": "ltr",
+  "categories": [
+    "finance",
+    "productivity",
+    "utilities"
   ],
-  "screenshots": [],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "label": "Central de Decisão — QuotaLab PRO"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Central de Decisão",
-      "url": "./ql_inadimplencia_SALVO__3_.html#dashboard",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "short_name": "Central",
+      "description": "Diagnóstico financeiro completo",
+      "url": "./ql_inadimplencia_SALVO__3_.html?tab=dashboard&utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Diagnóstico",
-      "url": "./ql_inadimplencia_SALVO__3_.html#diagnostico",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "short_name": "Diagnóst.",
+      "description": "6 perguntas de inteligência operacional",
+      "url": "./ql_inadimplencia_SALVO__3_.html?tab=diagnostico&utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
-  ]
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
 }
