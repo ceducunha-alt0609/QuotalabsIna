@@ -16,6 +16,9 @@
 <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
 <link rel="shortcut icon" href="icons/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="120x120" href="icons/icon-120.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
@@ -748,6 +751,14 @@ input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,
     <span class="ticker-pill" id="tick-status"></span>
   </div>
   <div class="ql-ticker-right no-print">
+    <!-- Botão instalar PWA (aparece só quando disponível) -->
+    <button id="pwa-install-btn"
+      onclick="qlInstallPWA()"
+      title="Instalar QuotaLab como app"
+      style="display:none;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--rs);background:var(--tbg);border:1px solid var(--tbd);color:var(--teal);font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap;letter-spacing:.03em;">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Instalar
+    </button>
     <!-- Save bar -->
     <div class="ql-save-bar">
       <span class="ql-save-dot" id="save-dot"></span>
@@ -3805,34 +3816,79 @@ function diagRun(n){
 </div>
 
 <script>
-/* ── Service Worker ── */
-if ('serviceWorker' in navigator) {
+/* ── Service Worker + PWA ── */
+(function(){
+
+  /* 1. Deep-link via ?tab= (shortcuts do manifest) */
+  const urlTab = new URLSearchParams(location.search).get('tab');
+  if (urlTab && typeof showTab === 'function') {
+    document.addEventListener('DOMContentLoaded', () => showTab(urlTab, null));
+  }
+
+  /* 2. Registrar SW */
+  if (!('serviceWorker' in navigator)) return;
+
+  let swReg = null;
+
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js', { scope: './' })
       .then(reg => {
+        swReg = reg;
         console.log('[QuotaLab] SW registrado:', reg.scope);
+        reg.update(); // checar atualização a cada load
 
-        /* Detectar nova versão disponível */
         reg.addEventListener('updatefound', () => {
           const newSW = reg.installing;
-          newSW?.addEventListener('statechange', () => {
+          if (!newSW) return;
+          newSW.addEventListener('statechange', () => {
             if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
-              /* Há atualização — notificar o usuário */
+              // Nova versão disponível — toast com ação de recarregar
               if (typeof qlToast === 'function') {
-                qlToast('Nova versão disponível — recarregue para atualizar.', 'info');
+                qlToast('Nova versão disponível — toque para atualizar', 'info');
               }
+              // Após 8s aplica silenciosamente
+              setTimeout(() => {
+                newSW.postMessage({ type: 'SKIP_WAITING' });
+              }, 8000);
             }
           });
         });
       })
-      .catch(err => console.warn('[QuotaLab] SW falhou:', err));
+      .catch(err => console.warn('[QuotaLab] SW não registrou:', err));
 
-    /* Recarregar quando SW assume controle (após atualização) */
+    // Recarregar ao assumir controle (update aplicado)
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       window.location.reload();
     });
   });
-}
+
+  /* 3. Capturar prompt de instalação para mostrar botão nativo */
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Mostrar botão de instalação no ticker se existir
+    const btn = document.getElementById('pwa-install-btn');
+    if (btn) btn.style.display = 'flex';
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    const btn = document.getElementById('pwa-install-btn');
+    if (btn) btn.style.display = 'none';
+    if (typeof qlToast === 'function') qlToast('QuotaLab instalado ✓', 'ok');
+  });
+
+  /* Expor função global para o botão chamar */
+  window.qlInstallPWA = async function() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('[QuotaLab] Install outcome:', outcome);
+    deferredPrompt = null;
+  };
+
+})();
 </script>
 
 </body>

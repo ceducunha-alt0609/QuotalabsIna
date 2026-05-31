@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fundo com cantos arredondados -->
+  <rect width="512" height="512" rx="110" fill="#0d1017"/>
+  <!-- Borda âmbar sutil -->
+  <rect x="18" y="18" width="476" height="476" rx="96" fill="none" stroke="#C08010" stroke-width="8" opacity="0.5"/>
+  <!-- Barra lateral âmbar -->
+  <rect x="0" y="80" width="22" height="352" rx="11" fill="#f0a020"/>
+  <!-- Q grande -->
+  <text x="152" y="330" font-family="Georgia,serif" font-size="260" font-weight="700" fill="#f0a020" text-anchor="middle">Q</text>
+  <!-- L menor, deslocado -->
+  <text x="342" y="330" font-family="Georgia,serif" font-size="200" font-weight="700" fill="#C08010" text-anchor="middle">L</text>
+  <!-- Linha decorativa embaixo -->
+  <rect x="96" y="370" width="320" height="6" rx="3" fill="#C08010" opacity="0.4"/>
+  <!-- PRO tag -->
+  <rect x="340" y="390" width="96" height="36" rx="8" fill="#1a1200" stroke="#C08010" stroke-width="1.5"/>
+  <text x="388" y="414" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#f0a020" text-anchor="middle" letter-spacing="3">PRO</text>
+</svg>
